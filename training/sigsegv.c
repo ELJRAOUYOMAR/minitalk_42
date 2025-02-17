@@ -3,7 +3,7 @@
 // Handling SIGSEGV 
 void handle_sigint(int signum)
 {
-    printf("Caught signal %d (SIGINT). Exiting safely...\n", signum);
+    printf("Caught signal %d (SIGSEGV). Exiting safely...\n", signum);
     exit(0);
 }
 

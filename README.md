@@ -62,7 +62,7 @@ int main() {
 - **No control over signal masking** (if another signal arrives, it might interrupt the handler).
 
 
-#### Using sigaction() for Advanced Signal Handling **(Recommended)**
+### Using sigaction() for Advanced Signal Handling **(Recommended)**
 The `sigaction` function in C is used to examine and change the action associated with a specific signal. It is a more powerful and flexible alternative to signal(), as it allows precise control over signal handling behavior.
 ##### 1. Function prototype
 ```C
@@ -87,11 +87,11 @@ struct sigaction {
     int sa_flags;                /* Flags to modify behavior */
 };
 ```
-- `sa_handel`
+- `sa_handler`
     - `SIG_DFL` → Default action.
     - `SIG_IGN` → Ignore the signal.
     - A custom function → User-defined signal handler.
-- `sa_siaction`
+- `sa_sigaction`
     - Used instead of `sa_handler` when `SA_SIGINFO` flag is set.
     - Provides additional context through a `siginfo_t` structure.
 - `sa_mask`
@@ -126,6 +126,117 @@ int sigemptyset(sigset_t *set);
 - When configuring `sigaction()` to specify `sa_mask` (signals blocked during handler execution).
 - Before setting up signal blocking using `sigprocmask()`.
 
-#### 6. [Example: Using sigemptyset with sigaction](training\signal_library\sigaction.c)
+#### 6. [Example: Using sigemptyset with sigaction(training\signal_library\sigaction.c)](training\signal_library\sigaction.c)
 
 
+### SIGUSR1 && SIGUSR2
+in C, and SIGUSR2 are user-defined signals used for inter-process communication (IPC). They allow processes to send custom signals to each other. These signals are commonly handled using the signal() or sigaction() functions.
+
+1. Understanding SIGUSR1 and SIGUSR2
+SIGUSR1 (Signal 10 on most systems) and SIGUSR2 (Signal 12) are reserved for user-defined purposes.
+They can be sent using kill() or raise().
+Processes can define custom handlers to perform specific actions when receiving these signals.
+2. Handling SIGUSR1 and SIGUSR2
+You can set up a signal handler using signal():
+```C
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+
+// Signal handler function
+void handle_signal(int sig)
+{
+    if (sig == SIGUSR1)
+        printf("Received SIGUSR1\n");
+    else if (sig == SIGUSR2)
+        printf("Received SIGUSR2\n");
+}
+
+int main()
+{
+    // Register signal handlers
+    signal(SIGUSR1, handle_signal);
+    signal(SIGUSR2, handle_signal);
+
+    printf("Process ID: %d\n", getpid());
+
+    // Keep the process running to receive signals
+    while (1)
+        pause(); // Wait for signals
+
+    return 0;
+}
+```
+
+3. Sending Signals
+From another terminal, send signals to the running process:
+```sh
+kill -SIGUSR1 <PID>
+kill -SIGUSR2 <PID>
+```
+Or from within another C program:
+```C
+#include <signal.h>
+#include <unistd.h>
+
+int main()
+{
+    pid_t pid = 1234; // Replace with the target process ID
+    kill(pid, SIGUSR1); // Send SIGUSR1
+    return 0;
+}
+```
+
+4. Using sigaction() Instead of signal()sigaction() is preferred for more reliable signal handling:
+```C
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+
+// Signal handler function
+void handle_signal(int sig, siginfo_t *info, void *context)
+{
+    if (sig == SIGUSR1)
+        printf("Received SIGUSR1 from PID %d\n", info->si_pid);
+    else if (sig == SIGUSR2)
+        printf("Received SIGUSR2 from PID %d\n", info->si_pid);
+}
+
+int main()
+{
+    struct sigaction sa;
+    sa.sa_flags = SA_SIGINFO;
+    sa.sa_sigaction = handle_signal;
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
+
+    printf("Process ID: %d\n", getpid());
+    
+    while (1)
+        pause(); // Wait for signals
+
+    return 0;
+}
+```
+
+5. Key Points
+- `SIGUSR1` and `SIGUSR2` are user-defined signals.
+- Use `signal()` or `sigaction()` to handle them.
+- Use `kill(pid, SIGUSR1)` or `kill(pid, SIGUSR2) to send signals.
+- `sigaction()` provides better control, such as retrieving sender info.
+
+### sigaddset()
+sigaddset() is a function in the POSIX signal handling API that is used to add a signal to a signal set (a sigset_t structure). It is part of a group of functions that help manipulate sets of signals, which are used when blocking, unblocking, or masking signals.
+```C 
+#include <signal.h>
+
+int sigaddset(sigset_t *set, int signum);
+```
+#### Parameters
+- set → Pointer to a signal set (sigset_t) where the signal should be added.
+- signum → The signal number to add (e.g., SIGINT, SIGTERM, SIGUSR1).
+#### Return Value
+- Returns 0 on success.
+- Returns -1 on failure, with errno set to indicate the error.
+
+#### Example: Using sigaddset()

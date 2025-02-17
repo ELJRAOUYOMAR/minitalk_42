@@ -13,6 +13,7 @@ int main()
     // syntax of sinal : void (*signal(int signum, void (*handler)(int)))(int);
     // signal(2, handle_sigint);
     signal(SIGINT, handle_sigint);
+    // signal(SIGTERM, handle_sigint);
     while (1)
     {
         printf("Running... Press Ctrl+C to exit.\n");
