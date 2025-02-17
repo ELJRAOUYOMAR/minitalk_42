@@ -4,7 +4,7 @@
 // Handling SIGINT (CTRL + C)
 void handle_sigint(int signum)
 {
-    printf("Caught signal %d (SIGINT). Exiting safely...", signum);
+    printf("Caught signal %d (SIGINT). Exiting safely...\n", signum);
     exit(0);
 }
 

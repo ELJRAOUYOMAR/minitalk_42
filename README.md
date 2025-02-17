@@ -2,7 +2,7 @@
 
 ## Signals
 ### Introduction to Signals in C
-A signal is a software interrupt delivered to a process. Some common signals include:
+Signals are asynchronous notifications sent to a process by the kernel or another process to notify it of an event. Some common signals include:
 
 `SIGINT` (Interrupt): Sent when the user presses `Ctrl+C`.
 `SIGTERM` (Terminate): Requests program termination.
@@ -53,7 +53,7 @@ void handler(int signum) {
 }
 
 int main() {
-    signal(SIGINT, handler);
+    signal(SIG2INT, handler);
     while (1); // Infinite loop
 }
 ```
