@@ -24,7 +24,7 @@ void ft_putnbr(int n)
         ft_putchar('0');
     else if (n < 0)
     {
-        putchar('-');
+        ft_putchar('-');
         ln = -ln;
     }
     i = 0;
