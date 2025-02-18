@@ -240,3 +240,17 @@ int sigaddset(sigset_t *set, int signum);
 - Returns -1 on failure, with errno set to indicate the error.
 
 #### Example: Using sigaddset()
+
+### Why kill() and not sigaction() or signal() in minitalk to send signal
+The main reason is that `kill()` is designed to send signals, while `sigaction()` is designed to handle them. Here's why:
+- `kill()` is a direct way to send a signal to a specific process.
+- It requires only a `PID` and the signal type.
+- The OS handles the delivery of the signal immediately.
+
+- `sigaction()` is useful for defining a callback function (handler) that is executed when a signal is received.
+- It doesn’t send a signal but instead waits until a signal arrives.
+
+#### Conclusion
+- `kill(pid, signal)` is the correct choice for sending signals.
+- `sigaction()` is the correct choice for receiving and handling signals.
+- Minitalk uses `kill()` in the client and `sigaction()` in the server for effective signal-based IPC.
