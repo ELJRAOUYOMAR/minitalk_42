@@ -1,4 +1,4 @@
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 void ft_putchar(char c)
 {
@@ -24,7 +24,7 @@ void ft_putnbr(int n)
         ft_putchar('0');
     else if (n < 0)
     {
-        ft_putchar('-');
+        putchar('-');
         ln = -ln;
     }
     i = 0;

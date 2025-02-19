@@ -27,7 +27,7 @@ static void get_pid(pid_t pid)
 
 void handle_signal(int signum)
 {
-    static char c;
+    static unsigned char c;
     static int bit;
 
     // c = 0;
