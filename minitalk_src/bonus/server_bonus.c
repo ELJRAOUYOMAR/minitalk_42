@@ -34,9 +34,11 @@ void handle_signal(int signum, siginfo_t *info, void *context)
     static unsigned char c;
     static int bit;
     static pid_t sender_pid;
+    static int message_received;
 
     (void)context;
     sender_pid = 0;
+    message_received = 0;
     if (sender_pid == 0)
         sender_pid = info->si_pid;
     if (signum == SIGUSR1)
@@ -49,7 +51,15 @@ void handle_signal(int signum, siginfo_t *info, void *context)
         {
             ft_putchar('\n');
             kill(sender_pid, SIGUSR1); // Send acknowledgment to client
+            if (!message_received)  // Print only once after the message
+            {
+                ft_putstr("this is message from: ");
+                ft_putnbr(sender_pid);
+                ft_putchar('\n');
+                message_received = 1;  // Set flag to prevent further printing
+            }
             sender_pid = 0;
+            message_received = 0;
         }
         c = 0;
         bit = 0;
