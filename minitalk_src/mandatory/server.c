@@ -6,7 +6,7 @@
 */
 static void get_pid(pid_t pid);
 
-void handle_signal(int signum);
+static void handle_signal(int signum);
 
 int main()
 {
@@ -25,7 +25,7 @@ static void get_pid(pid_t pid)
     ft_putchar('\n');
 }
 
-void handle_signal(int signum)
+static void handle_signal(int signum)
 {
     static unsigned char c;
     static int bit;

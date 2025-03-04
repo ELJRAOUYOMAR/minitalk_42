@@ -11,7 +11,7 @@
 */
 static void send_signal(pid_t pid, char c);
 static void send_message(pid_t pid, char *str);
-void ack_handler(int signum);
+static void ack_handler(int signum);
 
 int main(int ac, char **av)
 {
@@ -39,7 +39,7 @@ int main(int ac, char **av)
     sa.sa_flags = 0;
     sigaction(SIGUSR1, &sa, NULL);
     send_message(pid, av[2]);
-    pause(); // Wait for acknowledgment from serverd
+    pause(); // Wait for acknowledgment from server
     return (0);
 }
 
@@ -69,7 +69,7 @@ static void send_message(pid_t pid, char *str)
     send_signal(pid, '\0'); // Send null terminator
 }
 
-void ack_handler(int signum)
+static void ack_handler(int signum)
 {
     if (signum == SIGUSR1)
         ft_putstr("Message received by server\n");

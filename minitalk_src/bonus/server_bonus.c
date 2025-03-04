@@ -15,7 +15,7 @@ int main()
     get_pid(getpid());
     sa.sa_sigaction = handle_signal;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_SIGINFO;
+    sa.sa_flags = SA_SIGINFO;  // SA_SIGINFO means  Use sa_sigaction instead of sa_handler.
     sigaction(SIGUSR1, &sa, NULL);
     sigaction(SIGUSR2, &sa, NULL);
     while (1)
