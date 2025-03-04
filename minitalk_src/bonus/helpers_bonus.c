@@ -40,11 +40,11 @@ void ft_putnbr(int n)
 
 int ft_atoi(const char *str)
 {
-    int (sign), res;
+    int sign;
+    int res;
 
     res = 0;
     sign = 1;
-
     while (*str == ' ' || (*str >= 9 && *str <= 13))
         str++; 
     if (*str == '-' || *str == '+')

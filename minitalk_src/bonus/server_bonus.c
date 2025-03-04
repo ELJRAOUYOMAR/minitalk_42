@@ -5,7 +5,8 @@
  * handle_signal(): receive bytes from the client side
 */
 static void get_pid(pid_t pid);
-void handle_signal(int signum, siginfo_t *info, void *context);
+static void process_message(unsigned char c, int sender_pid, int *message_received);
+static void handle_signal(int signum, siginfo_t *info, void *context);
 
 int main()
 {
@@ -29,38 +30,39 @@ static void get_pid(pid_t pid)
     ft_putchar('\n');
 }
 
-void handle_signal(int signum, siginfo_t *info, void *context)
+static void process_message(unsigned char c, int sender_pid, int *message_received)
+{
+    ft_putchar(c);
+    if (c == '\0')
+    {
+        ft_putchar('\n');
+        kill(sender_pid, SIGUSR1);
+        if (!*message_received)
+        {
+            ft_putstr("this is a message from: ");
+            ft_putnbr(sender_pid);
+            ft_putchar('\n');
+            *message_received = 1;
+        }
+    }
+}
+
+static void handle_signal(int signum, siginfo_t *info, void *context)
 {
     static unsigned char c;
     static int bit;
-    static pid_t sender_pid;
+    static int sender_pid;
     static int message_received;
 
     (void)context;
-    sender_pid = 0;
-    message_received = 0;
-    if (sender_pid == 0)
+    if (!sender_pid)
         sender_pid = info->si_pid;
     if (signum == SIGUSR1)
         c |= (1 << (7 - bit));
     bit++;
     if (bit == 8)
     {
-        ft_putchar(c);
-        if (c == '\0')
-        {
-            ft_putchar('\n');
-            kill(sender_pid, SIGUSR1); // Send acknowledgment to client
-            if (!message_received)  // Print only once after the message
-            {
-                ft_putstr("this is message from: ");
-                ft_putnbr(sender_pid);
-                ft_putchar('\n');
-                message_received = 1;  // Set flag to prevent further printing
-            }
-            sender_pid = 0;
-            message_received = 0;
-        }
+        process_message(c, sender_pid, &message_received);
         c = 0;
         bit = 0;
     }

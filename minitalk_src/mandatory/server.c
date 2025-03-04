@@ -30,10 +30,10 @@ void handle_signal(int signum)
     static unsigned char c;
     static int bit;
 
-    // c = 0;
-    // bit = 0;
     if (signum == SIGUSR1)
         c |= (1 << (7 - bit));
+    // else if (signum == SIGUSR2)
+    //     c &= ~(1 << (7 - bit)); // Set the bit to 0 for SIGUSR2
     bit++;
     if (bit == 8)
     {

@@ -22,5 +22,5 @@ int main()
     while (1)
         pause(); // wait for signals
     
-        return 0; 
+    return 0; 
 }

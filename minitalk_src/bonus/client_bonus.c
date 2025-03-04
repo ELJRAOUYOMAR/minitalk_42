@@ -39,7 +39,7 @@ int main(int ac, char **av)
     sa.sa_flags = 0;
     sigaction(SIGUSR1, &sa, NULL);
     send_message(pid, av[2]);
-    pause(); // Wait for acknowledgment from server
+    pause(); // Wait for acknowledgment from serverd
     return (0);
 }
 
