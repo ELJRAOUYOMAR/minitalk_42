@@ -1,8 +1,8 @@
 # Program names
-SERVER = mandatory/server
-CLIENT = mandatory/client
-SERVER_BONUS = bonus/server_bonus
-CLIENT_BONUS = bonus/client_bonus
+SERVER = server
+CLIENT = client
+SERVER_BONUS = server_bonus
+CLIENT_BONUS = client_bonus
 
 # Compiler flags and cleanup
 CC = cc
