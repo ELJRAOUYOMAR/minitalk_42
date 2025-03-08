@@ -49,7 +49,7 @@ static void send_signal(pid_t pid, char c)
             kill(pid, SIGUSR1);
         else 
             kill(pid, SIGUSR2);
-        usleep(500);
+        usleep(1000);
         bit--;
     }
 }

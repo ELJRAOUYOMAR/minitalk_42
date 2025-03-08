@@ -28,11 +28,11 @@ CLIENT_BONUS_OBJ = bonus/client_bonus.o bonus/helpers_bonus.o
 # All target (builds mandatory)
 all: $(SERVER) $(CLIENT)
 
-# Compile server (only server.o and helpers.o)
+# Compile server
 $(SERVER): $(SERVER_OBJ)
 	$(CC) $(CFLAGS) $(SERVER_OBJ) -o $(SERVER)
 
-# Compile client (only client.o and helpers.o)
+# Compile client
 $(CLIENT): $(CLIENT_OBJ)
 	$(CC) $(CFLAGS) $(CLIENT_OBJ) -o $(CLIENT)
 
@@ -51,13 +51,15 @@ $(CLIENT_BONUS): $(CLIENT_BONUS_OBJ)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up object files and executables
+# Clean up object files
 clean:
 	$(RM) $(OBJ1) $(OBJ2)
 
+# Clean up object files and executables
 fclean: clean
 	$(RM) $(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)
 
+# rebuild 
 re: fclean all
 
 .PHONY: all clean fclean re bonus
