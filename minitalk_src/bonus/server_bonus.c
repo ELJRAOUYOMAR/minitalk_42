@@ -64,9 +64,11 @@ static void handle_signal(int signum, siginfo_t *info, void *context)
     static int message_received;
 
     (void)context;
-    if (sender_pid != info->si_pid)
+    if (sender_pid == 0 || sender_pid != info->si_pid)
     {
         sender_pid = info->si_pid;
+        c = 0;
+        bit = 0;
         message_received = 0;  // Reset for new sender
     }
     if (signum == SIGUSR1)

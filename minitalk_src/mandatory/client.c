@@ -13,7 +13,7 @@
 */
 static void send_signal(pid_t pid, char c);
 static void send_message(pid_t pid, char *str);
-
+static void handle_ack(int signum);
 int main(int ac, char **av)
 {
     pid_t pid;
@@ -35,12 +35,11 @@ int main(int ac, char **av)
         ft_putstr("Invalid PID, no such process\n");
         return (1);
     }
-    sa.sa_handler = NULL;
+    sa.sa_handler = handle_ack;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sigaction(SIGUSR1, &sa, NULL);
     send_message(pid, av[2]);
-    // pause(); // Wait for acknowledgment from server
     return (0);
 }
 
@@ -70,6 +69,10 @@ static void send_message(pid_t pid, char *str)
     send_signal(pid, '\0');
 }
 
+static void handle_ack(int signum)
+{
+    (void)signum;
+}
 // /*
 //  * send_signal - send signal to the server.
 //  * @pid: the process id of the signal.
