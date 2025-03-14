@@ -1,28 +1,27 @@
 #include "minitalk.h"
 
-
-
 /*
  * send_signal - send signal to the server.
  * @pid: the process id of the signal.
- * @c: the character to be sent to the server(we send character by character).
+ * @c: the character to be sent to the server(we send charachter by character).
  * 
  * SIGUSR1 = Bit 1 (1)
  * SIGUSR2 = Bit 0 (0)
+ * kill(pid, SIGUSR1): send SIGUSR1 signal to process with PID `pid`. 
  * Return:  
 */
 static void send_signal(pid_t pid, char c);
-static void send_message(pid_t pid, char *str);
-static void handle_ack(int signum);
+
+static void send_massage(pid_t pid, char *str);
+
 int main(int ac, char **av)
 {
-    pid_t pid;
-    struct sigaction sa;
+    int pid;
 
     if (ac != 3)
     {
         ft_putstr("Usage: ./client <PID> <Message>\n");
-        return (1);
+        return (1);   // EXIT_FAILURE in stdlib
     }    
     pid = ft_atoi(av[1]);
     if (pid <= 0)
@@ -35,11 +34,7 @@ int main(int ac, char **av)
         ft_putstr("Invalid PID, no such process\n");
         return (1);
     }
-    sa.sa_handler = handle_ack;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGUSR1, &sa, NULL);
-    send_message(pid, av[2]);
+    send_massage(pid, av[2]);
     return (0);
 }
 
@@ -59,7 +54,7 @@ static void send_signal(pid_t pid, char c)
     }
 }
 
-static void send_message(pid_t pid, char *str)
+static void send_massage(pid_t pid, char *str)
 {
     int i;
 
@@ -69,32 +64,27 @@ static void send_message(pid_t pid, char *str)
     send_signal(pid, '\0');
 }
 
-static void handle_ack(int signum)
-{
-    (void)signum;
-}
-// /*
-//  * send_signal - send signal to the server.
-//  * @pid: the process id of the signal.
-//  * @c: the character to be sent to the server(we send charachter by character).
-//  * 
-//  * SIGUSR1 = Bit 1 (1)
-//  * SIGUSR2 = Bit 0 (0)
-//  * kill(pid, SIGUSR1): send SIGUSR1 signal to process with PID `pid`. 
-//  * Return:  
-// */
+/*
+ * send_signal - send signal to the server.
+ * @pid: the process id of the signal.
+ * @c: the character to be sent to the server(we send character by character).
+ * 
+ * SIGUSR1 = Bit 1 (1)
+ * SIGUSR2 = Bit 0 (0)
+ * Return:  
+*/
 // static void send_signal(pid_t pid, char c);
-
-// static void send_massage(pid_t pid, char *str);
-
+// static void send_message(pid_t pid, char *str);
+// static void handle_ack(int signum);
 // int main(int ac, char **av)
 // {
-//     int pid;
+//     pid_t pid;
+//     struct sigaction sa;
 
 //     if (ac != 3)
 //     {
 //         ft_putstr("Usage: ./client <PID> <Message>\n");
-//         return (1);   // EXIT_FAILURE in stdlib
+//         return (1);
 //     }    
 //     pid = ft_atoi(av[1]);
 //     if (pid <= 0)
@@ -107,7 +97,11 @@ static void handle_ack(int signum)
 //         ft_putstr("Invalid PID, no such process\n");
 //         return (1);
 //     }
-//     send_massage(pid, av[2]);
+//     sa.sa_handler = handle_ack;
+//     sigemptyset(&sa.sa_mask);
+//     sa.sa_flags = 0;
+//     sigaction(SIGUSR1, &sa, NULL);
+//     send_message(pid, av[2]);
 //     return (0);
 // }
 
@@ -127,7 +121,7 @@ static void handle_ack(int signum)
 //     }
 // }
 
-// static void send_massage(pid_t pid, char *str)
+// static void send_message(pid_t pid, char *str)
 // {
 //     int i;
 
@@ -135,4 +129,9 @@ static void handle_ack(int signum)
 //     while (str[i])
 //         send_signal(pid, str[i++]);
 //     send_signal(pid, '\0');
+// }
+
+// static void handle_ack(int signum)
+// {
+//     (void)signum;
 // }
